@@ -81,7 +81,6 @@ const App = () => {
             </div>
             <button onClick={pickOne}>Pick</button>
             {result && <p>result: {result}</p>}
-            {picked && <p>picked: {picked}</p>}
         </div>
     );
 };
