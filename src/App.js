@@ -43,10 +43,12 @@ const App = () => {
         const random = active.length > 1 ? players.length * 4 : 1;
         var i = 0;
         var id = setInterval(run, 100);
+        var winner = '';
         function run() {
-            var current = active[Math.floor(Math.random() * active.length)];
+            var current = i < random ? active[Math.floor(Math.random() * active.length)] : winner;
             if (i < random) {
-                setResult(current)
+                setResult(current);
+                winner = current;
                 if (!mute) {
                     play();
                 };
