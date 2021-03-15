@@ -3,6 +3,9 @@ import { useCookies } from 'react-cookie';
 import useSound from 'use-sound';
 import sound from './sound.mp3'
 import success from './success.mp3'
+import hat from './hat.png';
+import ticket from './ticket.png';
+import './App.css';
 
 const App = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['players']);
@@ -14,6 +17,8 @@ const App = () => {
     const [mute, setMute] = useState(false);
     const [play] = useSound(sound);
     const [playSuccess] = useSound(success);
+    const [config, setConfig] = useState(false);
+    const [done, setDone] = useState(false);
 
     useEffect(() => {
         if (cookies.players) {
@@ -39,6 +44,7 @@ const App = () => {
     };
 
     const pickOne = () => {
+        setDone(false);
         const active = players.filter(player => picked.indexOf(player) == -1);
         const random = active.length > 1 ? players.length * 4 : 1;
         var i = 0;
@@ -52,11 +58,12 @@ const App = () => {
                 if (!mute) {
                     play();
                 };
-                
+
                 i++;
             } else {
                 setPicked([...picked, current])
                 clearInterval(id);
+                setDone(true);
                 if (!mute) {
                     playSuccess();
                 };
@@ -66,7 +73,10 @@ const App = () => {
 
     return (
         <div >
-            <div>
+            <div className='options'>
+                {!config ? <i onClick={() => setConfig(true)} className="fas fa-cogs"></i> : <i onClick={() => setConfig(false)} className="fas fa-times"></i>}
+            </div>
+            {config ? <div>
                 <form onSubmit={addPlayer}>
                     <label htmlFor='name'>Name:</label>
                     <input onChange={e => setName(e.target.value)} value={name} name='name' type='text' />
@@ -78,9 +88,20 @@ const App = () => {
                         return <li key={players.indexOf(player)} >{player} <span onClick={() => removePlayer(player)}> X</span></li>
                     })}
                 </ul>
-            </div>
-            <button onClick={pickOne}>Pick</button>
-            {result && <p>result: {result}</p>}
+            </div> : <div>
+                <div className='hat_ticket_container'>
+                    <div className={done ? 'ticket done' : 'ticket'} style={{ backgroundImage: `url(${ticket})` }}>
+                        <div className='result_container'>
+                            {result && <p>{result}</p>}
+                        </div>
+                    </div>
+                    <div className='hat_container'>
+                        <button onClick={pickOne}>
+                            <img className='hat' src={hat} />
+                        </button>
+                    </div>
+                </div>
+            </div>}
         </div>
     );
 };
