@@ -46,7 +46,7 @@ const App = () => {
     const pickOne = () => {
         setDone(false);
         const active = players.filter(player => picked.indexOf(player) == -1);
-        const random = active.length > 1 ? players.length * 4 : 1;
+        const random = active.length > 1 ? players.length : 1;
         var i = 0;
         var id = setInterval(run, 100);
         var winner = '';
