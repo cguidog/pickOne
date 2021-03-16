@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Irish+Grover&display=swap');
+
 .options {
     padding: 2rem;
     font-size: 2rem;
@@ -24,7 +26,7 @@
     display: flex;
     justify-content: center;
     position: absolute;
-    bottom: 0;
+    bottom: 50px;
     width: 100%;
 }
 button {
@@ -38,6 +40,7 @@ button {
     transform: rotate(180deg);
     margin: auto;
     z-index: 1;
+    transition: all 0.2s ease-in-out;
 }
 
 .ticket {
@@ -56,8 +59,76 @@ button {
 }
 
 .done {
-    bottom: 500px;
+    bottom: 550px;
     width: 300px;
     height: 150px;
+    font-size: 3rem;
+}
+
+.settings_container {
+    width: 80%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form_container {
+ text-align: center;
+}
+input[type='text'] {
+    background-color: #D9Df1d;
+    border-radius: 10px;
+    height: 30px;
+    width: 200px;
+    font-family: 'Irish Grover', cursive;
     font-size: 2rem;
+    color:#60a830;
+    padding: 5px;
+}
+label {
+    color: #224D17;
+    font-size: 2rem;
+}
+
+input[type='submit'], .clear {
+    cursor: pointer;
+    font-family: 'Irish Grover', cursive;
+    background-color: #60a830;
+    height: 45px;
+    font-size: 2rem;
+    padding: 10px;
+    margin-left: 20px;
+    position: relative;
+    top: 10px;
+    border-radius: 10px;
+    border: #224D17 solid 2px;
+}
+
+.list_container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.player {
+    display: flex;
+    flex-direction: row;
+    width: 100px;
+    font-size: 2rem;
+    color: #224D17;
+    padding: 20px;
+    margin: 10px 50px;
+}
+.player > div > i {
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+.player > div > i:hover {
+    color: #60a830;
+
+}
+
+.player > div {
+    margin: 5px;
 }

@@ -31,8 +31,10 @@ const App = () => {
 
     const addPlayer = (event) => {
         event && event.preventDefault();
-        setPlayers([...players, name]);
-        setName('');
+        if (name !== '') {
+            setPlayers([...players, name]);
+            setName('');
+        }
     };
 
     const removePlayer = (value) => {
@@ -76,23 +78,25 @@ const App = () => {
             <div className='options'>
                 {!config ? <i onClick={() => setConfig(true)} className="fas fa-cogs"></i> : <i onClick={() => setConfig(false)} className="fas fa-times"></i>}
             </div>
-            {config ? <div>
+            {config ? <div className='settings_container'>
+                <div className='form_container'>
                 <form onSubmit={addPlayer}>
-                    <label htmlFor='name'>Name:</label>
+                    <label htmlFor='name'>Name </label>
                     <input onChange={e => setName(e.target.value)} value={name} name='name' type='text' />
                     <input type='submit' value='Add' />
                 </form>
-                <button onClick={removeAllPlayers}>Clear All</button>
-                <ul>
+                </div>
+                <div className='list_container'>
                     {players && players.map((player) => {
-                        return <li key={players.indexOf(player)} >{player} <span onClick={() => removePlayer(player)}> X</span></li>
+                        return <div className='player' key={players.indexOf(player)} ><div >{player}</div><div onClick={() => removePlayer(player)}><i className="fas fa-times"></i></div></div>
                     })}
-                </ul>
+                </div>
+                <div style={{textAlign: 'center'}}>{players.length > 1 && <button className='clear' onClick={removeAllPlayers}>Clear All</button>}</div>
             </div> : <div>
                 <div className='hat_ticket_container'>
                     <div className={done ? 'ticket done' : 'ticket'} style={{ backgroundImage: `url(${ticket})` }}>
                         <div className='result_container'>
-                            {result && <p>{result}</p>}
+                            {result ? <p style={{textAlign: 'center'}}>{result}</p> : <p style={{textAlign: 'center'}}>No more players</p>}
                         </div>
                     </div>
                     <div className='hat_container'>
