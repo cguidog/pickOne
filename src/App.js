@@ -6,6 +6,7 @@ import success from './success.mp3'
 import hat from './hat.png';
 import ticket from './ticket.png';
 import clover from './clover.png';
+import mask from './mask.png';
 import './App.css';
 
 const App = () => {
@@ -78,6 +79,7 @@ const App = () => {
     return (
         <div >
             <div className='options'>
+                <div className='title'><h1>QACD’s Nuggets of Gold</h1></div>
                 {!config ? <i onClick={() => setConfig(true)} className="fas fa-cogs"></i> : <i onClick={() => setConfig(false)} className="fas fa-times"></i>}
             </div>
             {config ? <div className='settings_container'>
@@ -110,47 +112,17 @@ const App = () => {
                 <div className='clover_container'>
                     {
                         players && players.map((player) => {
-                            return <img className={animate ? players.indexOf(player) % 2 == 0 ? 'clover animate' : ' clover animate2' : 'clover'} key={players.indexOf(player)} src={clover} />
+                            return <img className={animate ? players.indexOf(player) % 2 == 0 ? 'clover animate' : ' clover animate2' : 'clover'} key={players.indexOf(player)} src={players.indexOf(player) % 2 == 0 ? clover : mask} />
                         })
                     }
                     {
                         players && players.map((player) => {
-                            return <img className={animate ? players.indexOf(player) % 2 == 0 ? 'clover animate' : ' clover animate2' : 'clover'} key={players.indexOf(player)} src={clover} />
+                            return <img className={animate ? players.indexOf(player) % 2 == 0 ? 'clover animate' : ' clover animate2' : 'clover'} key={players.indexOf(player)} src={players.indexOf(player) % 2 == 0 ? clover : mask} />
                         })
                     }
                     {
                         players && players.map((player) => {
-                            return <img className={animate ? players.indexOf(player) % 2 == 0 ? 'clover animate' : ' clover animate2' : 'clover'} key={players.indexOf(player)} src={clover} />
-                        })
-                    }
-                    {
-                        players && players.map((player) => {
-                            return <img className={animate ? players.indexOf(player) % 2 == 0 ? 'clover animate' : ' clover animate2' : 'clover'} key={players.indexOf(player)} src={clover} />
-                        })
-                    }
-                    {
-                        players && players.map((player) => {
-                            return <img className={animate ? players.indexOf(player) % 2 == 0 ? 'clover animate' : ' clover animate2' : 'clover'} key={players.indexOf(player)} src={clover} />
-                        })
-                    }
-                    {
-                        players && players.map((player) => {
-                            return <img className={animate ? players.indexOf(player) % 2 == 0 ? 'clover animate' : ' clover animate2' : 'clover'} key={players.indexOf(player)} src={clover} />
-                        })
-                    }
-                    {
-                        players && players.map((player) => {
-                            return <img className={animate ? players.indexOf(player) % 2 == 0 ? 'clover animate' : ' clover animate2' : 'clover'} key={players.indexOf(player)} src={clover} />
-                        })
-                    }
-                    {
-                        players && players.map((player) => {
-                            return <img className={animate ? players.indexOf(player) % 2 == 0 ? 'clover animate' : ' clover animate2' : 'clover'} key={players.indexOf(player)} src={clover} />
-                        })
-                    }
-                    {
-                        players && players.map((player) => {
-                            return <img className={animate ? players.indexOf(player) % 2 == 0 ? 'clover animate' : ' clover animate2' : 'clover'} key={players.indexOf(player)} src={clover} />
+                            return <img className={animate ? players.indexOf(player) % 2 == 0 ? 'clover animate' : ' clover animate2' : 'clover'} key={players.indexOf(player)} src={players.indexOf(player) % 2 == 0 ? clover : mask} />
                         })
                     }
                 </div>
