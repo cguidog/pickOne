@@ -7,6 +7,7 @@ import hat from './hat.png';
 import ticket from './ticket.png';
 import clover from './clover.png';
 import mask from './mask.png';
+import zipper from './zipper.png';
 import './App.css';
 
 const App = () => {
@@ -19,11 +20,12 @@ const App = () => {
     const [play] = useSound(sound);
     const [playSuccess] = useSound(success);
     const [config, setConfig] = useState(false);
-    const [done, setDone] = useState(false);
+    const [done, setDone] = useState(true);
     const [animate, setAnimate] = useState(false);
     const [timer, setTimer] = useState(false);
     const [time, setTime] = useState(60);
     const [intervalID, setIntervalID] = useState('');
+    const [noTime, setNoTime] = useState(false);
     var interval;
     var second = time;
     useEffect(() => {
@@ -47,7 +49,7 @@ const App = () => {
     };
 
     const removePlayer = (value) => {
-        setPlayers(players.filter(player => player != value));
+        setPlayers(players.filter(player => player !== value));
     };
 
     const removeAllPlayers = () => {
@@ -59,68 +61,77 @@ const App = () => {
         } else {
             interval = setInterval(running, 1000);
             setIntervalID(interval);
+
         }
-            
+
         function running() {
             if (second > 0) {
                 second--;
                 setTime(second);
-                console.log(interval);
             } else {
                 stopTimer();
+                setNoTime(true);
             }
         }
     }
     const stopTimer = () => {
-        if (intervalID !== '') {
-            setTimer(false);
-            setTime(parseInt(cookies.time));
-            clearInterval(intervalID);
-        }
+        setTimer(false);
+        setTime(parseInt(cookies.time));
+        clearInterval(intervalID);
+        clearInterval(interval);
     }
 
     const pickOne = () => {
-        setTime(parseInt(cookies.time));
-        second = parseInt(cookies.time);
-        stopTimer();
-        setDone(false);
-        setAnimate(true);
-        interval = '';
-        const active = players.filter(player => picked.indexOf(player) == -1);
-        const random = active.length > 1 ? 10 : 1;
-        var i = 0;
-        var id = setInterval(run, 100);
-        var winner = '';
-        function run() {
-            var current = i < random ? active[Math.floor(Math.random() * active.length)] : winner;
-            if (i < random) {
-                setResult(current);
-                winner = current;
-                if (!mute) {
-                    play();
-                };
-                i++;
-            } else {
-                setPicked([...picked, current])
-                clearInterval(id);
-                setDone(true);
-                setAnimate(false);
-                setTimer(true);
-                runTimer();
-                if (!mute) {
-                    playSuccess();
+        if (done) {
+            setTime(parseInt(cookies.time));
+            second = parseInt(cookies.time);
+            stopTimer();
+            setDone(false);
+            setAnimate(true);
+            interval = '';
+            const active = players.filter(player => picked.indexOf(player) === -1);
+            const random = active.length > 1 ? 10 : 1;
+            var i = 0;
+            var id = setInterval(run, 100);
+            var winner = '';
+            function run() {
+                var current = i < random ? active[Math.floor(Math.random() * active.length)] : winner;
+                if (i < random) {
+                    setResult(current);
+                    winner = current;
+                    if (!mute) {
+                        play();
+                    };
+                    i++;
+                } else {
+                    setPicked([...picked, current])
+                    clearInterval(id);
+                    setDone(true);
+                    setAnimate(false);
+                    if (players.length > picked.length) {
+                        setTimer(true);
+                        runTimer();
+                    }
+                    if (!mute) {
+                        playSuccess();
+                    };
                 };
             };
-        };
+        }
     };
 
     return (
-        <div >
+        <div>
+            {noTime && <div className='no_time' onClick={() => setNoTime(false)}>
+                <div className='no_time_img'>
+                <img src={zipper}/>
+                </div>
+                </div>}
             <div className='options'>
                 <div className='title'><h1>QACD’s Nuggets of Gold</h1></div>
-                {!config ? <i onClick={() => {setConfig(true);stopTimer()}} className="fas fa-cogs"></i> : <i onClick={() => setConfig(false)} className="fas fa-times"></i>}
+                {!config ? <i onClick={() => { setConfig(true); stopTimer() }} className="fas fa-cogs"></i> : <i onClick={() => setConfig(false)} className="fas fa-times"></i>}
             </div>
-            {timer && <span style={{color: time <= 15 ? 'red' : ''}} className={time <= 15 ? 'timer time_out' : 'timer'} ><i className="fas fa-stopwatch"></i> {time}</span>}
+            {timer && <span style={{ color: time <= 15 ? 'red' : '' }} className={time <= 15 ? 'timer time_out' : 'timer'} ><i className="fas fa-stopwatch"></i> {time}</span>}
             {config ? <div className='settings_container'>
                 <div className='form_container'>
                     <form >
@@ -141,7 +152,7 @@ const App = () => {
                 <div style={{ textAlign: 'center' }}>{players.length > 1 && <button className='clear' onClick={removeAllPlayers}>Clear All</button>}</div>
             </div> : <div>
                 <div className='hat_ticket_container'>
-                    <div className={done ? 'ticket done' : 'ticket'} style={{ backgroundImage: `url(${ticket})` }}>
+                    <div className={done && picked.length !== 0 ? 'ticket done' : 'ticket'} style={{ backgroundImage: `url(${ticket})` }}>
                         <div className='result_container'>
                             {result ? <p style={{ textAlign: 'center' }}>{result}</p> : <p style={{ textAlign: 'center' }}>No more players</p>}
                         </div>
@@ -155,17 +166,17 @@ const App = () => {
                 <div className='clover_container'>
                     {
                         players && players.map((player) => {
-                            return <img className={animate ? players.indexOf(player) % 2 == 0 ? 'clover animate' : ' clover animate2' : 'clover'} key={players.indexOf(player)} src={players.indexOf(player) % 2 == 0 ? clover : mask} />
+                            return <img className={animate ? players.indexOf(player) % 2 === 0 ? 'clover animate' : ' clover animate2' : 'clover'} key={players.indexOf(player)} src={players.indexOf(player) % 2 === 0 ? clover : mask} />
                         })
                     }
                     {
                         players && players.map((player) => {
-                            return <img className={animate ? players.indexOf(player) % 2 == 0 ? 'clover animate' : ' clover animate2' : 'clover'} key={players.indexOf(player)} src={players.indexOf(player) % 2 == 0 ? clover : mask} />
+                            return <img className={animate ? players.indexOf(player) % 2 === 0 ? 'clover animate' : ' clover animate2' : 'clover'} key={players.indexOf(player)} src={players.indexOf(player) % 2 === 0 ? clover : mask} />
                         })
                     }
                     {
                         players && players.map((player) => {
-                            return <img className={animate ? players.indexOf(player) % 2 == 0 ? 'clover animate' : ' clover animate2' : 'clover'} key={players.indexOf(player)} src={players.indexOf(player) % 2 == 0 ? clover : mask} />
+                            return <img className={animate ? players.indexOf(player) % 2 === 0 ? 'clover animate' : ' clover animate2' : 'clover'} key={players.indexOf(player)} src={players.indexOf(player) % 2 === 0 ? clover : mask} />
                         })
                     }
                 </div>

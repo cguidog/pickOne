@@ -239,3 +239,35 @@ input[type='submit'], .clear {
     50% {font-size: 4rem;}
     100% {font-size: 3rem;}
   }
+
+  .no_time {
+      position: absolute;
+      top: 25vh;
+      z-index: 100;
+      width: 100%;
+      display: flex;
+  }
+  .no_time_img {
+      margin: auto;
+      width: 500px;
+      height: 500px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #fff;
+      border: 50px solid red;
+      border-radius: 400px;
+      animation-name: no_time_img;
+      animation-duration: 0.5s;
+      animation-iteration-count: infinite;
+  }
+
+  @keyframes no_time_img {
+    from {border: 75px solid red;}
+    to {border: 50px solid rgb(167, 0, 0);}
+    
+  }
+  .no_time_img > img {
+      margin: auto;
+      max-width: 400px;
+  }
