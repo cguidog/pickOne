@@ -10,7 +10,7 @@ import mask from './mask.png';
 import './App.css';
 
 const App = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['players']);
+    const [cookies, setCookie, removeCookie] = useCookies(['players', 'time']);
     const [players, setPlayers] = useState([]);
     const [name, setName] = useState('');
     const [picked, setPicked] = useState([]);
@@ -21,9 +21,17 @@ const App = () => {
     const [config, setConfig] = useState(false);
     const [done, setDone] = useState(false);
     const [animate, setAnimate] = useState(false);
+    const [timer, setTimer] = useState(false);
+    const [time, setTime] = useState(60);
+    const [intervalID, setIntervalID] = useState('');
+    var interval;
+    var second = time;
     useEffect(() => {
         if (cookies.players) {
             setPlayers(cookies.players);
+        }
+        if (cookies.time) {
+            setTime(parseInt(cookies.time));
         }
     }, []);
     useEffect(() => {
@@ -45,10 +53,39 @@ const App = () => {
     const removeAllPlayers = () => {
         setPlayers([]);
     };
+    const runTimer = () => {
+        if (interval) {
+            stopTimer();
+        } else {
+            interval = setInterval(running, 1000);
+            setIntervalID(interval);
+        }
+            
+        function running() {
+            if (second > 0) {
+                second--;
+                setTime(second);
+                console.log(interval);
+            } else {
+                stopTimer();
+            }
+        }
+    }
+    const stopTimer = () => {
+        if (intervalID !== '') {
+            setTimer(false);
+            setTime(parseInt(cookies.time));
+            clearInterval(intervalID);
+        }
+    }
 
     const pickOne = () => {
+        setTime(parseInt(cookies.time));
+        second = parseInt(cookies.time);
+        stopTimer();
         setDone(false);
         setAnimate(true);
+        interval = '';
         const active = players.filter(player => picked.indexOf(player) == -1);
         const random = active.length > 1 ? 10 : 1;
         var i = 0;
@@ -62,13 +99,14 @@ const App = () => {
                 if (!mute) {
                     play();
                 };
-
                 i++;
             } else {
                 setPicked([...picked, current])
                 clearInterval(id);
                 setDone(true);
                 setAnimate(false);
+                setTimer(true);
+                runTimer();
                 if (!mute) {
                     playSuccess();
                 };
@@ -80,10 +118,15 @@ const App = () => {
         <div >
             <div className='options'>
                 <div className='title'><h1>QACD’s Nuggets of Gold</h1></div>
-                {!config ? <i onClick={() => setConfig(true)} className="fas fa-cogs"></i> : <i onClick={() => setConfig(false)} className="fas fa-times"></i>}
+                {!config ? <i onClick={() => {setConfig(true);stopTimer()}} className="fas fa-cogs"></i> : <i onClick={() => setConfig(false)} className="fas fa-times"></i>}
             </div>
+            {timer && <span style={{color: time <= 15 ? 'red' : ''}} className={time <= 15 ? 'timer time_out' : 'timer'} ><i className="fas fa-stopwatch"></i> {time}</span>}
             {config ? <div className='settings_container'>
                 <div className='form_container'>
+                    <form >
+                        <label htmlFor='timer'>Timer </label>
+                        <input onChange={(e) => { setTime(e.target.value); setCookie('time', e.target.value, { maxAge: 2592000 }) }} type='number' name='timer' value={time} /><span> Seconds</span>
+                    </form>
                     <form onSubmit={addPlayer}>
                         <label htmlFor='name'>Name </label>
                         <input onChange={e => setName(e.target.value)} value={name} name='name' type='text' />
